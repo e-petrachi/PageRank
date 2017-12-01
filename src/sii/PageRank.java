@@ -1,11 +1,6 @@
 package sii;
 
 import Jama.Matrix;
-
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.*;
 
 public class PageRank {
@@ -14,40 +9,6 @@ public class PageRank {
     private List params = new ArrayList();
     private static Map<String, String[]> outlinkMap =   new HashMap();
     private static Map<String, String[]> inlinkMap  =   new HashMap();
-
-    public static void main(String[] args) throws IOException {
-
-        PageRank ranking = new PageRank();
-
-        FileInputStream in = new FileInputStream("linkgraph.txt");
-        BufferedReader br = new BufferedReader(new InputStreamReader(in));
-
-        String strLine;
-        String[] tempStringArray = null;
-
-        int iTemp = 0;
-
-        while ((strLine = br.readLine()) != null) {
-
-            tempStringArray = strLine.split(" ");
-
-            String[] tempValueArray = new String[tempStringArray.length-1];
-
-            for(iTemp=1;iTemp<tempStringArray.length;iTemp++){
-                tempValueArray[iTemp-1] = tempStringArray[iTemp];
-            }
-
-            outlinkMap.put(tempStringArray[0], tempValueArray);
-        }
-        in.close();
-
-        setInboundLinks();
-
-        for(int j=1;j<=outlinkMap.size();j++){
-            String keytoString = Integer.toString(j);
-            System.out.println(keytoString+" "+ranking.rank(keytoString));
-        }
-    }
 
     public double rank(String pageId)
     {
@@ -117,7 +78,7 @@ public class PageRank {
         return inlinkMap.get(pageId);
     }
 
-    private static void setInboundLinks(){
+    public static void setInboundLinks(){
 
         int valueLength;
         String keytoString;
@@ -151,7 +112,7 @@ public class PageRank {
 
     }
 
-    public static String[] mergeArray(String[] ar1, String[] ar2){
+    private static String[] mergeArray(String[] ar1, String[] ar2){
         String[] ar3 = Arrays.copyOf(ar1, ar1.length+ar2.length);
         System.arraycopy(ar2, 0, ar3, ar1.length, ar2.length);
         return ar3;
@@ -159,5 +120,12 @@ public class PageRank {
 
     private String[] getOutboundLinks(String pageId) {
         return outlinkMap.get(pageId);
+    }
+
+    public void putOutlinkMap(String[] tempStringArray, int i, String[] tempValueArray){
+        outlinkMap.put(tempStringArray[i], tempValueArray);
+    }
+    public int outlinkMapSize(){
+        return this.outlinkMap.size();
     }
 }
